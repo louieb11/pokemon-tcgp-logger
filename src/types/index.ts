@@ -12,4 +12,5 @@ export interface GameLog {
   userDeck: Deck;
   opponentDeck: Deck;
   result: 'win' | 'loss' | 'tie';
+  turnOrder?: 'first' | 'second';
 }
