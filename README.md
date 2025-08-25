@@ -1,10 +1,10 @@
 # Pokémon TCG Pocket Ranked Logger
 
-![App Screenshot]([Link to a screenshot of your app once deployed])
+<img width="1194" height="744" alt="Image" src="https://github.com/user-attachments/assets/53b6c204-2cf0-4983-9f7f-69f54c77ddc4" />
 
 A clean, interactive, and stream-friendly ranked logger for the Pokémon TCG Pocket. This tool allows players and streamers to track their game history, session stats, and performance against the meta in real-time.
 
-[Link to deployed Vercel app]
+https://pokemon-tcgp-logger.vercel.app/
 
 ---
 
