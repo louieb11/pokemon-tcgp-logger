@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Deck, GameLog } from '@/types';
-import DeckSelector from './DeckSelector'; 
+import DeckSelector from './DeckSelector';
 
 interface GameLoggerProps {
   decks: Deck[];
@@ -11,48 +11,49 @@ interface GameLoggerProps {
 }
 
 export default function GameLogger({ decks, onAddGame }: GameLoggerProps) {
+  // MOVED HOOKS HERE: All hooks must be at the top level.
+  const [userDeck, setUserDeck] = useState<Deck | undefined>(decks[0]);
+  const [opponentDeck, setOpponentDeck] = useState<Deck | undefined>(decks[0]);
+  const [turnOrder, setTurnOrder] = useState<'first' | 'second' | undefined>();
 
-    if (!decks || decks.length === 0) {
+  // The guard clause now comes AFTER the hooks.
+  if (!decks || decks.length === 0) {
     return (
       <div className="p-6 bg-gray-800 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold text-white mb-4">Loading Decks...</h2>
       </div>
     );
   }
-  // 2. Update state to hold the full Deck object, not 'undefined'
-  const [userDeck, setUserDeck] = useState<Deck>(decks[0]);
-  const [opponentDeck, setOpponentDeck] = useState<Deck>(decks[0]);
-
-  const [turnOrder, setTurnOrder] = useState<'first' | 'second' | undefined>();
 
   const handleSubmit = (result: 'win' | 'loss' | 'tie') => {
     if (!userDeck || !opponentDeck) return;
     onAddGame({ userDeck, opponentDeck, result, turnOrder });
-    // Clear the selection for the next game
     setTurnOrder(undefined);
   };
 
   return (
     <div className="p-6 bg-gray-800 rounded-lg shadow-md w-full max-w-md">
-      <h2 className="text-2xl font-bold text-white mb-4">Log a New Game</h2>
+      {/* ... The rest of your JSX remains the same ... */}
+       <h2 className="text-2xl font-bold text-white mb-4">Log a New Game</h2>
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-1">Your Deck</label>
           <DeckSelector 
             decks={decks} 
-            selectedDeck={userDeck} 
+            selectedDeck={userDeck!} // We can assert this is not undefined because of the guard clause
             setSelectedDeck={setUserDeck} 
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">Opponent's Deck</label>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Opponent&apos;s Deck</label>
           <DeckSelector 
             decks={decks} 
-            selectedDeck={opponentDeck} 
+            selectedDeck={opponentDeck!} // We can assert this is not undefined because of the guard clause
             setSelectedDeck={setOpponentDeck} 
           />
         </div>
       </div>
+      
       <div className="mt-4">
         <label className="block text-sm font-medium text-gray-300 mb-2">Did I Go First or Second? (Optional)</label>
         <div className="grid grid-cols-2 gap-2">
@@ -80,24 +81,9 @@ export default function GameLogger({ decks, onAddGame }: GameLoggerProps) {
       </div>
 
       <div className="mt-6 flex justify-around">
-        <button
-          onClick={() => handleSubmit('win')}
-          className="px-8 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors"
-        >
-          WIN
-        </button>
-        <button
-          onClick={() => handleSubmit('tie')}
-          className="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition-colors"
-        >
-          TIE
-        </button>
-        <button
-          onClick={() => handleSubmit('loss')}
-          className="px-8 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors"
-        >
-          LOSS
-        </button>
+        <button onClick={() => handleSubmit('win')} className="px-6 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors">WIN</button>
+        <button onClick={() => handleSubmit('tie')} className="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition-colors">TIE</button>
+        <button onClick={() => handleSubmit('loss')} className="px-6 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors">LOSS</button>
       </div>
     </div>
   );
